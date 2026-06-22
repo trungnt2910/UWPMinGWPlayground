@@ -8,64 +8,45 @@ This is a demo of UWP apps (CoreApplication) on MinGW.
 
 ## Why
 
-To stress test the new C++/WinRT MinGW support mostly, also it is fun.
+Originally, to stress test the new C++/WinRT MinGW support mostly, also it is fun.
+
+Now, to give coding agents on Linux the ability to easily build and deploy to UWP targets.
 
 ## Build
 
 To build this, you'll need the following:
 
-- CMake
-- C++/WinRT `cppwinrt` in `$PATH`
-- A MinGW toolchain, LLVM/Clang 15 and GCC 12 from MSYS2 are tested. llvm-mingw is also tested.
-
-The best way to get a working toolchain is install the following in MSYS2:
-
-```
-# CLANG64 Subsystem, with LLVM/Clang
-pacman -S mingw-w64-clang-x86_64-{toolchain,cppwinrt,cmake,ninja}
-
-# UCRT64 Subsystem, with GCC
-pacman -S mingw-w64-ucrt-x86_64-{toolchain,cppwinrt,cmake,ninja}
-```
+- CMake.
+- `llvm-mingw`. Some dependencies are known not to crash GCC.
+- Windows 10 SDK for Windows hosts, required for `makeappx.exe`.
 
 With these, just build using CMake:
-```
-cd src/build
-cmake ..
-cmake --build .
+
+```cmd
+cmake --preset Release-x64
+cmake --build bin\Release\x64
 ```
 
 ## Deploy
 
-Manual deploy is required for now, you can use the `Add-AppxPackage` PowerShell cmdlet for this.
+You should first install the `.cer` file to the Local Machine Trusted Root Certification
+Authorities store, then the `.appx` file.
 
-If you are currently in MSYS2 bash, you can deploy and run the app with:
+If that does not work (especially on newer Windows 11 builds), you can use the `Add-AppxPackage`
+PowerShell cmdlet for this.
 
-```
-powershell.exe -Command Add-AppxPackage -Register ./AppxManifest.xml
-explorer.exe '/e,shell:appsfolder\CoreAppMinGW_706gaab1xw0ht!App'
-```
-
-It is tested to be working on recent enough OS versions on Xbox and IoT Core, for Mobile some hacks
-might be needed, aside from a working toolchain for 32-bit ARM.
+It has been tested to be working on RS2+ Desktop and Mobile.
 
 ## Packaging
 
-You can create an Appx with the `appx` target:
+By default, the build command creates an AppX package at `out\${Configuration}\${Architecture}`.
 
-```
-cmake --build . -t appx
-```
+The package is signed with the key in `src/UWPMinGWPlayground.pfx` using
+[`ccky`](https://github.com/trungnt2910/SignToolPlayground).
 
-`makemsix` from [msix-packaging](https://github.com/microsoft/msix-packaging) is required in `$PATH`.
+## Status
 
-The package is not signed by default.
-
-Signing the package requires osslsigncode version 2.9 or higher due to a bug in msix/appx handling.
-
-Alternatively, you can use `MakeAppx.exe` and `SignTool.exe` from Windows SDK.
-
-## What works
+### What Works
 
 - XAML layout (load in **runtime** only)
 - `IValueConverter` (initialized in code-behind)
@@ -74,7 +55,7 @@ how to implement this, it sucks but eh)
 - `ICommand`
 - Setting events from code-behind
 
-## What doesn't
+### What Doesn't
 
 - Compiled XAML and `x:Bind`
 - Automatically generated control references via `x:Name` (so you'll need to crawl through the
