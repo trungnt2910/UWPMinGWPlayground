@@ -1,5 +1,6 @@
 MIT License
 
+Copyright (C) 2026 Trung Nguyen
 Copyright (c) 2023 driver1998
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

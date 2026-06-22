@@ -78,7 +78,7 @@ namespace winrt::CoreAppMinGW::implementation {
             this->value = winrt::unbox_value<T>(value);
             this->m_onPropertyChanged(m_name);
         }
-        
+
         T value;
 
       private:

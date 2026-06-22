@@ -3,7 +3,6 @@
 #include <winrt/Windows.UI.Xaml.Input.h>
 #include <winrt/base.h>
 
-
 #include <functional>
 
 namespace winrt {

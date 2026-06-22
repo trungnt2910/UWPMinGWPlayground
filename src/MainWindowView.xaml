@@ -18,9 +18,9 @@
                 Slider.Value:
                 <Run Text="{Binding ElementName=slider, Path=Value}"></Run>
                 <LineBreak />
-                NegativeDoubleConverter: 
+                NegativeDoubleConverter:
                 <Run Text="{Binding ElementName=slider, Path=Value, Converter={StaticResource NegativeDoubleConverter}}"></Run>
-            </TextBlock>            
+            </TextBlock>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
