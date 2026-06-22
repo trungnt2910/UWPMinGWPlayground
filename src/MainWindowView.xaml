@@ -5,9 +5,11 @@
         <StackPanel Orientation="Vertical">
             <TextBox Text="{Binding UserName, Mode=TwoWay}" />
             <TextBlock FontSize="{Binding ElementName=slider, Path=Value}" Text="{Binding Message}">
+                <!--
                 <TextBlock.Foreground>
                     <SolidColorBrush Color="{Binding ElementName=colorPicker, Path=Color}" />
                 </TextBlock.Foreground>
+                -->
             </TextBlock>
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="btn1" Command="{Binding GreetingCommand}">Say Hello</Button>
@@ -26,7 +28,8 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <ColorPicker Grid.Column="0" x:Name="colorPicker" Color="Blue" Margin="0,0,8,0"/>
+                <!-- TODO: ColorPicker is not available on 15xxx builds. -->
+                <!-- <ColorPicker Grid.Column="0" x:Name="colorPicker" Color="Blue" Margin="0,0,8,0"/> -->
                 <ListView Grid.Column="1" ItemsSource="{Binding Items}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
