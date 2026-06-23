@@ -11,24 +11,7 @@ message(STATUS "Building for ${UWP_APPX_ARCH}.")
 file(COPY Images MainWindowView.xaml DESTINATION ${CMAKE_BINARY_DIR})
 configure_file(AppxManifest.in AppxManifest.xml)
 
-set(CPPWINRT_INPUT "references/Windows.winmd")
-set(CPPWINRT_OUTPUT_DIR "${CMAKE_BINARY_DIR}/cppwinrt")
-
-add_custom_command(
-    OUTPUT
-        ${CPPWINRT_OUTPUT_DIR}/winrt/base.h
-    COMMAND
-        ${UWP_CPPWINRT_EXECUTABLE} -pch . -input ${CPPWINRT_INPUT} -output ${CPPWINRT_OUTPUT_DIR}
-    WORKING_DIRECTORY
-        ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT
-        "Generating C++/WinRT Headers..."
-    DEPENDS
-        ${UWP_CPPWINRT_TARGET}
-)
-
 set(SOURCES
-    ${CPPWINRT_OUTPUT_DIR}/winrt/base.h
     App.cpp
     Property.hpp
     MainWindowView.cpp
@@ -43,7 +26,9 @@ set(SOURCES
     SimpleCommand.h)
 
 add_executable(${PROJECT_NAME} WIN32 ${SOURCES})
-include_directories(${CPPWINRT_OUTPUT_DIR})
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${UWP_WINRT_INCLUDE_DIR})
+add_dependencies(${PROJECT_NAME} ${UWP_WINRT_INCLUDE_TARGET})
 
 target_link_libraries(${PROJECT_NAME} ucrtapp windowsapp winstorecompat)
 target_link_options(${PROJECT_NAME} PRIVATE -municode -static -Wl,--appcontainer)

@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-# These third-party deps here are meant to be built for the **host** system.
+# These third-party tools here are meant to be built for the **host** system.
 
 set(UWP_THIRD_PARTY_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/ThirdParty")
 
@@ -58,3 +58,37 @@ ExternalProject_Add(
 ExternalProject_Add_StepTargets(ccky install)
 set(UWP_CCKY_EXECUTABLE "${UWP_THIRD_PARTY_INSTALL_DIR}/bin/ccky")
 set(UWP_CCKY_TARGET ccky-install)
+
+# See https://www.nuget.org/packages/Microsoft.Windows.SDK.Contracts for all versions.
+set(
+    UWP_CONTRACTS_VERSION
+    # This is the oldest version available on NuGet.
+    # To target RS2 Windows (e.g. 15035 ARM, W10M), we need to refrain from using RS3+ APIs.
+    "10.0.17134.1000"
+    CACHE
+    STRING "The version of Microsoft.Windows.SDK.Contracts to use"
+)
+set(UWP_NUGET_API_BASE "https://www.nuget.org/api/v2/package")
+ExternalProject_Add(
+    microsoft-windows-sdk-contracts
+    URL "${UWP_NUGET_API_BASE}/Microsoft.Windows.SDK.Contracts/${UWP_CONTRACTS_VERSION}"
+
+    DEPENDS ${UWP_CPPWINRT_TARGET}
+
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND
+        ${UWP_CPPWINRT_EXECUTABLE}
+            -pch <BINARY_DIR>
+            -input <SOURCE_DIR>/ref/netstandard2.0
+            -output <BINARY_DIR>/include
+    INSTALL_COMMAND
+        ${CMAKE_COMMAND} -E copy_directory_if_newer
+            <BINARY_DIR>/include
+            ${UWP_THIRD_PARTY_INSTALL_DIR}/include
+)
+ExternalProject_Add_StepTargets(microsoft-windows-sdk-contracts install)
+# TODO: Maybe let AppX.cmake handle the build instead?
+# It does not seem right when ${UWP_THIRD_PARTY_INSTALL_DIR}/bin contains host tools while
+# ${UWP_THIRD_PARTY_INSTALL_DIR}/include contains target headers.
+set(UWP_WINRT_INCLUDE_DIR "${UWP_THIRD_PARTY_INSTALL_DIR}/include")
+set(UWP_WINRT_INCLUDE_TARGET microsoft-windows-sdk-contracts-install)
