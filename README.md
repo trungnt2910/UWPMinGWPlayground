@@ -17,7 +17,7 @@ Now, to give coding agents on Linux the ability to easily build and deploy to UW
 To build this, you'll need the following:
 
 - CMake.
-- `llvm-mingw`. Some dependencies are known not to crash GCC.
+- `llvm-mingw`. Some dependencies are known to crash GCC.
 - Windows 10 SDK for Windows hosts, required for `makeappx.exe`.
 
 With these, just build using CMake:
