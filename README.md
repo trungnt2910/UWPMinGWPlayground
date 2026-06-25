@@ -29,6 +29,18 @@ cmake --build bin\Release\x64
 
 ## Deploy
 
+### Locally
+
+On a compatible Windows host, simply run:
+
+```cmd
+cmake --install bin\Release\x64
+```
+
+This will (re-)install the AppX file and launch the application.
+
+### Remotely
+
 You should first install the `.cer` file to the Local Machine Trusted Root Certification
 Authorities store, then the `.appx` file.
 
