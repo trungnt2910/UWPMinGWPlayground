@@ -7,13 +7,12 @@ function(uwp_add_appx NAME)
     cmake_parse_arguments(ARG "${OPTIONS}" "${ONE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
 
     # Main Executable
-    set(NAME_EXE ${NAME}-exe)
-    add_executable(${NAME_EXE} WIN32 ${ARG_SOURCES})
-    set_target_properties(${NAME_EXE} PROPERTIES OUTPUT_NAME "${NAME}")
-    target_include_directories(${NAME_EXE} PRIVATE ${UWP_WINRT_INCLUDE_DIR})
-    add_dependencies(${NAME_EXE} ${UWP_WINRT_INCLUDE_TARGET})
-    target_link_libraries(${NAME_EXE} ucrtapp windowsapp winstorecompat)
-    target_link_options(${NAME_EXE} PRIVATE -municode -static -Wl,--appcontainer)
+    add_executable(${NAME} WIN32 ${ARG_SOURCES})
+    set_target_properties(${NAME} PROPERTIES OUTPUT_NAME "${NAME}")
+    target_include_directories(${NAME} PRIVATE ${UWP_WINRT_INCLUDE_DIR})
+    add_dependencies(${NAME} ${UWP_WINRT_INCLUDE_TARGET})
+    target_link_libraries(${NAME} ucrtapp windowsapp winstorecompat)
+    target_link_options(${NAME} PRIVATE -municode -static -Wl,--appcontainer)
 
     # AppX
     set(APPX_BASE ${CMAKE_CURRENT_BINARY_DIR}/${NAME}-appx)
@@ -31,9 +30,9 @@ function(uwp_add_appx NAME)
     add_custom_command(
         OUTPUT "${APPX_EXE}"
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "$<TARGET_FILE_NAME:${NAME_EXE}>"
+            "$<TARGET_FILE_NAME:${NAME}>"
             "${APPX_EXE}"
-        DEPENDS ${NAME_EXE}
+        DEPENDS ${NAME}
         COMMENT "Copying AppX executable ${APPX_EXE}"
     )
     list(APPEND APPX_FILES "${APPX_EXE}")
@@ -123,10 +122,11 @@ function(uwp_add_appx NAME)
         endforeach()
     endforeach()
 
+    set(APPX_TARGET ${NAME}-appx)
     set(APPX_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${NAME}.appx")
     set(APPX_CER "${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cer")
     add_custom_target(
-        ${NAME}
+        ${APPX_TARGET}
         ALL
         COMMAND
             "${UWP_MAKEAPPX_EXECUTABLE}" pack
@@ -146,7 +146,7 @@ function(uwp_add_appx NAME)
             ${APPX_FILES}
     )
     set_target_properties(
-        ${NAME} PROPERTIES
+        ${APPX_TARGET} PROPERTIES
             ADDITIONAL_CLEAN_FILES "${APPX_BASE};${APPX_OUTPUT};${APPX_CER}"
     )
 endfunction()
