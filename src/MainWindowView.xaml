@@ -1,15 +1,20 @@
 <UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rs3="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,5)"
+    mc:Ignorable="rs3"
+>
     <ScrollViewer Padding="8">
         <StackPanel Orientation="Vertical">
             <TextBox Text="{Binding UserName, Mode=TwoWay}" />
-            <TextBlock FontSize="{Binding ElementName=slider, Path=Value}" Text="{Binding Message}">
-                <!--
+            <TextBlock
+                FontSize="{Binding ElementName=slider, Path=Value}"
+                Text="{Binding Message}"
+            >
                 <TextBlock.Foreground>
-                    <SolidColorBrush Color="{Binding ElementName=colorPicker, Path=Color}" />
+                    <SolidColorBrush x:Name="titleBrush" Color="Blue" />
                 </TextBlock.Foreground>
-                -->
             </TextBlock>
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="btn1" Command="{Binding GreetingCommand}">Say Hello</Button>
@@ -23,13 +28,11 @@
                 NegativeDoubleConverter:
                 <Run Text="{Binding ElementName=slider, Path=Value, Converter={StaticResource NegativeDoubleConverter}}"></Run>
             </TextBlock>
-            <Grid>
+            <Grid x:Name="demoGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <!-- TODO: ColorPicker is not available on 15xxx builds. -->
-                <!-- <ColorPicker Grid.Column="0" x:Name="colorPicker" Color="Blue" Margin="0,0,8,0"/> -->
                 <ListView Grid.Column="1" ItemsSource="{Binding Items}">
                     <ListView.ItemTemplate>
                         <DataTemplate>

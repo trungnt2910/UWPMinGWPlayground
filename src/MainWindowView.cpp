@@ -6,11 +6,14 @@
 #endif
 
 #include <winrt/Windows.Foundation.Collections.h>
+#include <winrt/Windows.Foundation.Metadata.h>
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.UI.Core.h>
 #include <winrt/Windows.UI.Xaml.Controls.Primitives.h>
 #include <winrt/Windows.UI.Xaml.Controls.h>
+#include <winrt/Windows.UI.Xaml.Data.h>
 #include <winrt/Windows.UI.Xaml.Input.h>
+#include <winrt/Windows.UI.Xaml.Media.h>
 #include <winrt/Windows.UI.Xaml.h>
 
 #include "MainWindowView.h"
@@ -21,8 +24,12 @@
 
 namespace winrt {
     using namespace winrt::Windows::Foundation;
+    using namespace winrt::Windows::Foundation::Metadata;
+    using namespace winrt::Windows::UI;
     using namespace winrt::Windows::UI::Xaml;
     using namespace winrt::Windows::UI::Xaml::Controls;
+    using namespace winrt::Windows::UI::Xaml::Data;
+    using namespace winrt::Windows::UI::Xaml::Media;
 } // namespace winrt
 
 namespace winrt::CoreAppMinGW::implementation {
@@ -37,6 +44,22 @@ namespace winrt::CoreAppMinGW::implementation {
         viewModel->UserName(L"MinGW");
         DataContext(viewModel.as<IInspectable>());
         viewModel->GreetingCommand().Execute(nullptr);
+
+        auto demoGrid = this->FindName(L"demoGrid").as<Grid>();
+        auto titleBrush = this->FindName(L"titleBrush").as<SolidColorBrush>();
+        if (ApiInformation::IsTypePresent(L"Windows.UI.Xaml.Controls.ColorPicker")) {
+            auto colorPicker = ColorPicker();
+            colorPicker.Color(Colors::Blue());
+            colorPicker.Margin(Thickness(0, 0, 8, 0));
+            demoGrid.Children().Append(colorPicker);
+
+            auto colorBinding = Binding();
+            colorBinding.Path(PropertyPath(L"Color"));
+            colorBinding.Source(colorPicker);
+
+            BindingOperations::SetBinding(titleBrush, SolidColorBrush::ColorProperty(),
+                                          colorBinding);
+        }
 
         auto btn2 = this->FindName(L"btn2").as<Button>();
         if (btn2) {
