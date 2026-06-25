@@ -31,5 +31,6 @@ uwp_add_appx(
         DST .
             ${CMAKE_CURRENT_SOURCE_DIR}/*.xaml
 )
+pg_target_mingw_pdb(${PROJECT_NAME})
 
 uwp_install_appx(${PROJECT_NAME})

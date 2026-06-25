@@ -8,4 +8,6 @@ include(cmake/WindowsSDK.cmake)
 
 include(cmake/AppX.cmake)
 
+include(cmake/PDB.cmake)
+
 add_subdirectory(src)
