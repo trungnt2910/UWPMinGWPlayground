@@ -27,6 +27,7 @@ if(NOT CMAKE_HOST_WIN32)
         msix-packaging
         GIT_REPOSITORY  https://github.com/microsoft/msix-packaging
         GIT_TAG         master
+        GIT_SUBMODULES  ""
 
         USES_TERMINAL_CONFIGURE TRUE
         USES_TERMINAL_BUILD     TRUE
@@ -35,6 +36,13 @@ if(NOT CMAKE_HOST_WIN32)
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=Release
             -DCMAKE_INSTALL_PREFIX=${UWP_THIRD_PARTY_INSTALL_DIR}
+            -DMSIX_PACK=TRUE
+            -DUSE_VALIDATION_PARSER=TRUE
+
+        # The default install command installs a lot of slop but leaves behind bin/makemsix.
+        INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "<BINARY_DIR>/bin/makemsix"
+            "${UWP_THIRD_PARTY_INSTALL_DIR}/bin/makemsix"
     )
     ExternalProject_Add_StepTargets(msix-packaging install)
     set(UWP_MAKEAPPX_EXECUTABLE "${UWP_THIRD_PARTY_INSTALL_DIR}/bin/makemsix")
