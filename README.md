@@ -25,7 +25,7 @@ With these, just build using CMake:
 
 ```cmd
 cmake --preset Release-x64
-cmake --build bin\Release\x64
+cmake --build bin/Release/x64
 ```
 
 ## Deploy
@@ -35,24 +35,26 @@ cmake --build bin\Release\x64
 On a compatible Windows host, simply run:
 
 ```cmd
-cmake --install bin\Release\x64
+cmake --install bin/Release/x64
 ```
 
 This will (re-)install the AppX file and launch the application.
 
 ### Remotely
 
-You should first install the `.cer` file to the Local Machine Trusted Root Certification
-Authorities store, then the `.appx` file.
+First, run the same install command above.
+
+You should then add the `.cer` file to the Local Machine Trusted Root Certification Authorities
+store. After that, install the `.appx` file.
 
 If that does not work (especially on newer Windows 11 builds), you can use the `Add-AppxPackage`
 PowerShell cmdlet for this.
 
-It has been tested to be working on RS2+ Desktop and Mobile.
+The app has been tested to be working on RS2+ Desktop and Mobile.
 
 ## Packaging
 
-By default, the build command creates an AppX package at `out\${Configuration}\${Architecture}`.
+By default, the install command creates an AppX package at `out/${Configuration}/${Architecture}`.
 
 The package is signed with the key in `src/UWPMinGWPlayground.pfx` using
 [`ccky`](https://github.com/trungnt2910/SignToolPlayground).
