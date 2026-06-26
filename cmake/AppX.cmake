@@ -129,8 +129,13 @@ function(uwp_add_appx NAME)
         ${APPX_TARGET}
         ALL
         COMMAND
+            # makeappx requires -o to not complain when overwriting files,
+            # while makemsix complains when that flag is passed.
+            #
+            # Therefore, we should delete the existing file ourselves.
+            ${CMAKE_COMMAND} -E rm -f "${APPX_OUTPUT}"
+        COMMAND
             "${UWP_MAKEAPPX_EXECUTABLE}" pack
-                -o
                 -d "${APPX_BASE}"
                 -p "${APPX_OUTPUT}"
         COMMAND
