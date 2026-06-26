@@ -19,6 +19,7 @@ To build this, you'll need the following:
 - CMake.
 - `llvm-mingw`. Some dependencies are known to crash GCC.
 - Windows 10 SDK for Windows hosts, required for `makeappx.exe`.
+- Ninja, if you use the default presets.
 
 With these, just build using CMake:
 
