@@ -39,9 +39,9 @@ function(_uwp_find_windows_sdk)
     endforeach()
 endfunction()
 
-_uwp_find_windows_sdk()
-
 if(NOT UWP_MAKEAPPX_EXECUTABLE)
+    _uwp_find_windows_sdk()
+
     find_program(UWP_MAKEAPPX_EXECUTABLE
         NAMES makeappx.exe
         HINTS "${UWP_WINDOWS_KITS_ROOT}/bin/${UWP_LATEST_SDK_VERSION}/${UWP_HOST_SDK_ARCH}"
